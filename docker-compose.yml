@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+    php-httpd:
+      # image: rocordial/pontaje
+      build:
+        context: ./php
+      ports:
+          - 8000:80
+      volumes:
+          - ./www:/var/www/html
+          # - ./php/php.ini:/etc/php.ini
+
+    mariadb:
+      image: mariadb
+      volumes:
+          - mariadb-volume:/var/lib/mysql
+      environment:
+          TZ: "Asia/Bangkok"
+          MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+          MYSQL_ROOT_PASSWORD: "123456?A"
+          MYSQL_USER: 'devuser'
+          MYSQL_PASSWORD: 'devpass'
+          MYSQL_DATABASE: 'devdb'
+
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      links:
+          - 'mariadb:db'
+      ports:
+          - 8001:80
+
+volumes:
+    mariadb-volume:
